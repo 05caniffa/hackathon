@@ -1,0 +1,11 @@
+[
+	{
+		"name":"sb3cert",
+		"host":"t3://esbdc02:8001",
+		"maxRelativeToNowInDays":"0",
+		"minRelativeToNowInDays":"-1",
+		"state":"0",
+		"user":"weblogic",
+		"pass":"Fbs1fVAIqp2O196WaKQwKx9UqCaTBelH"
+	}
+]

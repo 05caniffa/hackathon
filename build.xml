@@ -1,0 +1,60 @@
+<project name="driver" default="war">
+    <path id="classpath">
+        <fileset dir="WebContent/WEB-INF/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="soa-lib">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="build/classes"/>
+        <pathelement location="WebContent/WEB-INF/classes"/>
+    </path>
+
+    <target name="init" depends="clean">
+        <mkdir dir="build/classes"/>
+        <mkdir dir="dist"/>
+        <mkdir dir="WebContent/WEB-INF/classes"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="dist" />
+        <delete dir="build" />
+        <delete dir="WebContent/WEB-INF/classes"/>
+    </target>
+
+    <target name="build" depends="init">
+        <javac srcdir="src"
+               destdir="build/classes"
+               debug="false"
+               includeAntRuntime="false"
+               includeJavaRuntime="true">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="war" depends="build">
+        <copy todir="WebContent/WEB-INF/classes">
+            <fileset dir="build/classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </copy>
+        <copy todir="WebContent/WEB-INF/classes">
+            <fileset dir=".">
+                <include name="**/cert.json"/>
+                <include name="**/log4j.properties"/>
+            </fileset>
+        </copy>
+        <war destfile="dist/soa-browser.war" webxml="WebContent/WEB-INF/web.xml">
+        <fileset dir="WebContent"/>
+        <lib dir="WebContent/WEB-INF/lib"/>
+        <classes dir="build/classes"/>
+        </war>
+    </target>
+
+    <target name="run" depends="build">
+        <java classname="Driver">
+            <classpath refid="classpath"/>
+            <arg line="${argstring}"/>
+        </java>
+    </target>
+</project>
