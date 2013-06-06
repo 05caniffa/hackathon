@@ -5,7 +5,7 @@ public class EnvParams{
     public String host;
     public Date minAbsolute;
     public Date maxAbsolute;
-    public int state;
+    public String state;
     public String compositeName;
     public String user;
     public String pass;
@@ -38,7 +38,7 @@ public class EnvParams{
 	out+="\n";
 	out+="minRelativeToNowInDays = "+String.valueOf(minRelativeToNowInDays)+"\n";
 	out+="maxRelativeToNowInDays = "+String.valueOf(maxRelativeToNowInDays)+"\n";
-	out+="state = "+String.valueOf(state)+"\n";
+	out+="state = "+state+"\n";
 	out+="compositeName = "+compositeName+"\n";
 	out+="user = "+user+"\n";
 	out+="pass = "+pass+"\n";

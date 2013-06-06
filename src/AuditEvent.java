@@ -1,3 +1,5 @@
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ucanian
@@ -9,22 +11,38 @@ public class AuditEvent {
     String label;
     String position;
     String payload;
+    long timediff;
     boolean show;
-    public AuditEvent(String label,String position,String payload){
-        this(label,position,payload,true);
+    public AuditEvent(String label,String position,String payload,long timediff){
+        this(label,position,payload,timediff,false);
     }
-    public AuditEvent(String label,String position,String payload,boolean show){
+    public AuditEvent(String label,String position,String payload,long timediff,boolean show){
         this.label=label;
         this.position=position;
         this.payload=payload;
         this.show=show;
+        this.timediff=timediff;
     }
     public String toString(){
-        String ret=this.position+": "+this.label;
+        String ret=this.position+": "+this.label+" | "+this.timediff;
         if(this.show){
             ret+="\n"+payload;
         }
         return ret;
+    }
+    public String parentRow(){
+        return "<tr class=\"parent\" data-level=\"1\">"+
+                "<td>"+this.label+"</td>"+
+                "<td>"+this.timediff+"</td>"+
+                "</tr>";
+    }
+    public String childRow(){
+        return "<tr class=\"child\" data-level=\"2\">"+
+                "<td>"+this.payload+"</td>"+
+                "</tr>";
+    }
+    public String toHtml(){
+        return parentRow()+childRow();
     }
 }
 

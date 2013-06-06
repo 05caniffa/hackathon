@@ -21,27 +21,30 @@ public class Env {
     private Hashtable props;
     private List<CompositeInstance> instances=null;
     private static org.apache.log4j.Logger logger;
-
+    private String error="";
     public Env(EnvParams ep) throws Exception{
         super();
         logger= Logger.getLogger("driver");
         locator(ep);
         if(locator==null)
-            throw new Exception("Locator not created");
+            throw new Exception(this.error);
         CompositeInstanceFilter filter=make_filter(ep);
         try{
             instances=locator.getCompositeInstances(filter);
             logger.info(" Number of instances after filtering: " + instances.size());
         }
         catch(Exception e){
-            logger.error("Error in getting composite instances",e);
+            this.error="Error in getting composite instances";
+            logger.error(this.error,e);
+            e.printStackTrace();
         }
     }
 
     private void locator(EnvParams ep){
         try{
             BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-            textEncryptor.setPassword(System.getenv("_WLS_PASS_KEY"));
+            //textEncryptor.setPassword(System.getenv("_WLS_PASS_KEY"));
+            textEncryptor.setPassword("password");
             String pass=textEncryptor.decrypt(ep.pass);
             props=new Hashtable();
             props.put(javax.naming.Context.PROVIDER_URL,ep.host);
@@ -52,11 +55,14 @@ public class Env {
             locator = LocatorFactory.createLocator(props);
         }
         catch(IllegalArgumentException e){
-            logger.error("Exception: Password cannot be empty see README");
-            System.exit(1);
+            this.error="Exception: Password cannot be empty see README";
+            logger.error(this.error,e);
+            e.printStackTrace();
         }
         catch(Exception e){
-            logger.error("Error in creating locator",e);
+            this.error="Error in creating locator";
+            logger.error(this.error,e);
+            e.printStackTrace();
         }
     }
 
@@ -92,7 +98,10 @@ public class Env {
                 filter.setMaxCreationDate(cal.getTime());
             }
         }
-        filter.setState(ep.state);
+        if(!(ep.state==null)){
+            filter.setState(Integer.parseInt(ep.state));
+        }
+        //filter.setState(ep.state);
         logger.info("Getting instances for " + ep.name);
         return filter;
     }

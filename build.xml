@@ -30,16 +30,18 @@
                includeJavaRuntime="true">
             <classpath refid="classpath"/>
         </javac>
+        <copy todir="build/classes">
+            <fileset dir=".">
+                <include name="**/cert.json"/>
+                <include name="**/log4j.properties"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="war" depends="build">
         <copy todir="WebContent/WEB-INF/classes">
             <fileset dir="build/classes">
                 <include name="**/*.class"/>
-            </fileset>
-        </copy>
-        <copy todir="WebContent/WEB-INF/classes">
-            <fileset dir=".">
                 <include name="**/cert.json"/>
                 <include name="**/log4j.properties"/>
             </fileset>

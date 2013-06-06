@@ -7,10 +7,12 @@ import org.apache.log4j.PropertyConfigurator;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import oracle.soa.management.facade.*;
 import oracle.soa.management.facade.bpel.*;
 import oracle.soa.management.util.*;
+import weblogic.xml.saaj.util.IOUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,23 +34,27 @@ public class Driver {
         String filename="cert.json";
         String ret="";
         logger= Logger.getLogger("driver");
-        PropertyConfigurator.configure("log4j.properties");
-        logger.info("Before try");
-        String path="before try";
         try{
-            File blah=new File(filename);
-            path=blah.getAbsolutePath();
-            logger.info(path);
-            byte[] buffer = new byte[(int) new File(filename).length()];
-            BufferedInputStream f = new BufferedInputStream(new FileInputStream(filename));
-            f.read(buffer);
-            jsonText=new String(buffer);
+            Properties props = new Properties();
+            props.load(Driver.class.getResourceAsStream("log4j.properties"));
+            PropertyConfigurator.configure(props);
+        }
+        catch(Exception e){
+            String error="Error in reading log4j.properties";
+            logger.error(error,e);
+            return error;
+        }
+        InputStream in=null;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try{
+            in=Driver.class.getResourceAsStream(filename);
+            jsonText=new String(IOUtils.toByteArray(in));
             logger.info(jsonText);
         }
-        catch (Exception e1){
+        catch (Exception e){
             String error="Error in reading input";
-            logger.error(error,e1);
-            return path;
+            logger.error(error,e);
+            return error;
         }
         Gson gson=new Gson();
         JsonParser parser = new JsonParser();
@@ -63,16 +69,16 @@ public class Driver {
                 for(CompositeInstance instance:instances){
                     List<ComponentInstance> l=instance.getChildComponentInstances(instanceFilter);
                     if(l.size()>0){
-                        String xml= String.valueOf(l.get(0).getAuditTrail());
-                        logger.info(xml);
-                        instance_list.add(new SoaInstance(xml));
-                        ret+=String.valueOf(instance_list.get(instance_list.size()-1));
+                        //String xml= String.valueOf(l.get(0).getAuditTrail());
+                        instance_list.add(new SoaInstance(l.get(0)));
+                        //ret+=String.valueOf(instance_list.get(instance_list.size()-1));
+                        ret+=instance_list.get(instance_list.size()-1).toHtml();
                     }
 
                 }
             }
             catch(Exception e){
-                e.printStackTrace();
+                //e.printStackTrace();
                 return e.getMessage();
             }
         }
@@ -80,6 +86,55 @@ public class Driver {
     }
     public static void main(String args[]){
         Driver d=new Driver();
-        System.out.println(d.htmlContent());
+        System.out.println(wrapper(d.htmlContent()));
+    }
+    public static String css(){
+        return "table,tr,td\n" +
+                "{\n" +
+                "border: 1px solid black;\n" +
+                "}";
+    }
+    public static String head(){
+        return "<title>Soa Browser</title>\n" +
+                "<script type=\"text/javascript\" src=\"jquery-2.0.2.min.js\"></script>\n" +
+                "<style>\n" +
+                css()+
+                "</style>\n" +
+                "      <script type=\"text/javascript\">\n" +
+                "            $(document).ready(function() {\n" +
+                "            \n" +
+                "                function getChildren($row) {\n" +
+                "                    var children = [], level = $row.attr('data-level');\n" +
+                "                    while($row.next().attr('data-level') > level) {\n" +
+                "      \n" +
+                "      \t\t if($row.next().attr('data-level') == parseInt(level)+1){\n" +
+                "                         children.push($row.next());\n" +
+                "      \t\t}\n" +
+                "                         $row = $row.next();\n" +
+                "                    }            \n" +
+                "                    return children;\n" +
+                "                }        \n" +
+                "            \n" +
+                "                $('.parent').on('click', function() {\n" +
+                "                \n" +
+                "                    var children = getChildren($(this));\n" +
+                "                    $.each(children, function() {\n" +
+                "                        $(this).toggle();\n" +
+                "                    })\n" +
+                "                });\n" +
+                "                 $(\"[data-level]\").hide();\n" +
+                "                 $(\"[data-level='0']\").show();\n" +
+                "                \n" +
+                "            })</script>";
+    }
+    public static String wrapper(String body){
+        return "<html>"+
+                head()+
+                "<body>"+
+                "<table>"+
+                body+
+                "</table>"+
+                "</body>"+
+                "</html>";
     }
 }
