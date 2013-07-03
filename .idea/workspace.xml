@@ -1,40 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="45d44498-2e84-4a3e-b455-e9dad83e2cde" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/WrongBPELException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ppe.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/prod.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/AuditEvent.class" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/AuditEvent.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/AuditEvent.class" afterPath="$PROJECT_DIR$/build/classes/AuditEvent.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/BrowserServlet.class" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/BrowserServlet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/BrowserServlet.class" afterPath="$PROJECT_DIR$/build/classes/BrowserServlet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/Driver.class" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/Driver.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/Driver.class" afterPath="$PROJECT_DIR$/build/classes/Driver.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/Env.class" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/Env.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/Env.class" afterPath="$PROJECT_DIR$/build/classes/Env.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/EnvParams.class" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/EnvParams.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/EnvParams.class" afterPath="$PROJECT_DIR$/build/classes/EnvParams.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/SoaInstance.class" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/SoaInstance.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/SoaInstance.class" afterPath="$PROJECT_DIR$/build/classes/SoaInstance.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/soa-browser.war" afterPath="$PROJECT_DIR$/dist/soa-browser.war" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AuditEvent.java" afterPath="$PROJECT_DIR$/src/AuditEvent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/BrowserServlet.java" afterPath="$PROJECT_DIR$/src/BrowserServlet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Driver.java" afterPath="$PROJECT_DIR$/src/Driver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Env.java" afterPath="$PROJECT_DIR$/src/Env.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/EnvParams.java" afterPath="$PROJECT_DIR$/src/EnvParams.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SoaInstance.java" afterPath="$PROJECT_DIR$/src/SoaInstance.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cert.json" afterPath="$PROJECT_DIR$/cert.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/cert.json" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/cert.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/cert.json" afterPath="$PROJECT_DIR$/build/classes/cert.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log4j.properties" afterPath="$PROJECT_DIR$/log4j.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/classes/log4j.properties" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/classes/log4j.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/log4j.properties" afterPath="$PROJECT_DIR$/build/classes/log4j.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run.sh" afterPath="$PROJECT_DIR$/run.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" readonly="true" id="45d44498-2e84-4a3e-b455-e9dad83e2cde" name="Default" comment="" />
     <ignored path="soa-browser.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/SoaInstance.java" changelist="45d44498-2e84-4a3e-b455-e9dad83e2cde" time="1372776500104" ignored="false" />
@@ -132,10 +99,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Driver.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Driver.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Driver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="137" column="29" selection-start="5379" selection-end="5379" vertical-scroll-proportion="3.8827434">
+            <state line="137" column="29" selection-start="5379" selection-end="5379" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2573#2586#0" expanded="true" />
@@ -146,6 +113,15 @@
                 <element signature="method#before#0;class#Driver#0" expanded="false" />
                 <element signature="method#after#0;class#Driver#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/build.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="20" selection-start="1115" selection-end="1116" vertical-scroll-proportion="1.1290323">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -318,7 +294,43 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="WebContent" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WEB-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="soa-browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hackathon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="soa-browser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hackathon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="soa-lib" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -506,7 +518,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="22" width="1436" height="878" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -521,7 +533,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2496361" sideWeight="0.67027026" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18633093" sideWeight="0.6486842" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18633093" sideWeight="0.6486842" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32972974" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -629,20 +641,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/WrongBPELException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="17" selection-start="326" selection-end="326" vertical-scroll-proportion="0.38709676">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="20" selection-start="1115" selection-end="1116" vertical-scroll-proportion="0.33173078">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/EnvParams.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="39" column="77" selection-start="921" selection-end="921" vertical-scroll-proportion="0.0">
@@ -711,7 +709,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Driver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="137" column="29" selection-start="5379" selection-end="5379" vertical-scroll-proportion="3.8827434">
+        <state line="137" column="29" selection-start="5379" selection-end="5379" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2573#2586#0" expanded="true" />
@@ -722,6 +720,13 @@
             <element signature="method#before#0;class#Driver#0" expanded="false" />
             <element signature="method#after#0;class#Driver#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="20" selection-start="1115" selection-end="1116" vertical-scroll-proportion="1.1290323">
+          <folding />
         </state>
       </provider>
     </entry>
