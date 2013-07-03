@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$//soa-browser.iml" filepath="$PROJECT_DIR$//soa-browser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/soa-browser.iml" filepath="$PROJECT_DIR$/soa-browser.iml" />
     </modules>
   </component>
 </project>
