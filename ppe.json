@@ -1,0 +1,10 @@
+[
+	{
+		"name":"sb1ppe",
+		"host":"t3://b1esbppe03:8001",
+		"maxRelativeToNowInMinutes":"-70",
+		"minRelativeToNowInMinutes":"-75",
+		"user":"weblogic",
+		"pass":"agS07GWEd0xzuI0j0qT/SqnLjipEXfVF"
+	}
+]

@@ -27,12 +27,18 @@ import javax.servlet.http.HttpServletResponse;
  * To change this template use File | Settings | File Templates.
  */
 public class Driver {
-    public Driver(){}
+    boolean show=false;
+    public Driver(boolean show){
+        this.show=show;
+    }
     private static org.apache.log4j.Logger logger;
-    public String htmlContent(){
+    public String htmlContent(String env){
+        return htmlContent(new PrintWriter(System.out,true),env);
+    }
+    public String htmlContent(PrintWriter out,String env){
         String jsonText="";
-        String filename="cert.json";
-        String ret="";
+        String filename=env+".json";
+        //String ret="";
         logger= Logger.getLogger("driver");
         try{
             Properties props = new Properties();
@@ -56,6 +62,7 @@ public class Driver {
             logger.error(error,e);
             return error;
         }
+        before(out);
         Gson gson=new Gson();
         JsonParser parser = new JsonParser();
         JsonArray array = parser.parse(jsonText).getAsJsonArray();
@@ -70,11 +77,13 @@ public class Driver {
                     List<ComponentInstance> l=instance.getChildComponentInstances(instanceFilter);
                     if(l.size()>0){
                         //String xml= String.valueOf(l.get(0).getAuditTrail());
-                        instance_list.add(new SoaInstance(l.get(0)));
-                        //ret+=String.valueOf(instance_list.get(instance_list.size()-1));
-                        ret+=instance_list.get(instance_list.size()-1).toHtml();
+                        if (l.get(0).getComponentName().equals("CourseMgmt") || l.get(0).getComponentName().equals("RegEnroll")){
+                            instance_list.add(new SoaInstance(l.get(0),show));
+                            //ret+=String.valueOf(instance_list.get(instance_list.size()-1));
+                            //ret+=instance_list.get(instance_list.size()-1).toHtml();
+                            out.println(instance_list.get(instance_list.size()-1).toHtml());
+                        }
                     }
-
                 }
             }
             catch(Exception e){
@@ -82,59 +91,190 @@ public class Driver {
                 return e.getMessage();
             }
         }
-        return ret;
-    }
-    public static void main(String args[]){
-        Driver d=new Driver();
-        System.out.println(wrapper(d.htmlContent()));
+        //return ret;
+        after(out);
+        return "";
     }
     public static String css(){
-        return "table,tr,td\n" +
-                "{\n" +
-                "border: 1px solid black;\n" +
-                "}";
+        return "<style>\n"+
+                "#hor-minimalist-b\n" +
+                "    {\n" +
+                "    font-family: \"Lucida Sans Unicode\", \"Lucida Grande\", Sans-Serif;\n" +
+                "    font-size: 12px;\n" +
+                "    background: #fff;\n" +
+                "    margin: 45px;\n" +
+                "    width: 480px;\n" +
+                "    border-collapse: collapse;\n" +
+                "    text-align: left;\n" +
+                "    }\n" +
+                "    #hor-minimalist-b th\n" +
+                "    {\n" +
+                "    font-size: 14px;\n" +
+                "    font-weight: normal;\n" +
+                "    color: #039;\n" +
+                "    padding: 6px 22px;\n" +
+                "    border-bottom: 2px solid #6678b1;\n" +
+                "    }\n" +
+                "    #hor-minimalist-b td\n" +
+                "    {\n" +
+                "    border-bottom: 1px solid #ccc;\n" +
+                "    color: #669;\n" +
+                "    padding: 6px 22px;\n" +
+                "    min-width: 70px;\n" +
+                "    white-space: nowrap;\n" +
+                "    }\n" +
+                "    #hor-minimalist-b tbody tr:hover td\n" +
+                "    {\n" +
+                "    color: #009;\n" +
+                "    }\n" +
+                "    #hor-minimalist-b textarea\n" +
+                "    {\n" +
+                "    min-width: 100%;\n" +
+                "    min-height: 200px;\n" +
+                "    resize:none;\n" +
+                "    border:none;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+1) .tablesorter-filter {\n" +
+                "    width: 80px;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+2) .tablesorter-filter {\n" +
+                "    width: 200px;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+3) .tablesorter-filter {\n" +
+                "    width: 80px;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+4) .tablesorter-filter {\n" +
+                "    width: 80px;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+5) .tablesorter-filter {\n" +
+                "    width: 40px;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+6) .tablesorter-filter {\n" +
+                "    width: 120px;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+7) .tablesorter-filter {\n" +
+                "    width: 180px;\n" +
+                "    }\n" +
+                "    .tablesorter .tablesorter-filter-row td:nth-child(8n+8) .tablesorter-filter {\n" +
+                "    width: 50px;\n" +
+                "    }\n"+
+                "</style>\n";
     }
     public static String head(){
         return "<title>Soa Browser</title>\n" +
-                "<script type=\"text/javascript\" src=\"jquery-2.0.2.min.js\"></script>\n" +
-                "<style>\n" +
+                "<script type=\"text/javascript\" src=\"http://code.jquery.com/jquery-2.0.2.min.js\"></script>\n" +
+                "<script type=\"text/javascript\" src=\"http://mottie.github.io/tablesorter/js/jquery.tablesorter.js\"></script>\n" +
+                "<script type=\"text/javascript\" src=\"http://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js\"></script>\n"+
                 css()+
-                "</style>\n" +
-                "      <script type=\"text/javascript\">\n" +
-                "            $(document).ready(function() {\n" +
-                "            \n" +
-                "                function getChildren($row) {\n" +
-                "                    var children = [], level = $row.attr('data-level');\n" +
-                "                    while($row.next().attr('data-level') > level) {\n" +
-                "      \n" +
-                "      \t\t if($row.next().attr('data-level') == parseInt(level)+1){\n" +
-                "                         children.push($row.next());\n" +
-                "      \t\t}\n" +
-                "                         $row = $row.next();\n" +
-                "                    }            \n" +
-                "                    return children;\n" +
-                "                }        \n" +
-                "            \n" +
-                "                $('.parent').on('click', function() {\n" +
-                "                \n" +
-                "                    var children = getChildren($(this));\n" +
-                "                    $.each(children, function() {\n" +
-                "                        $(this).toggle();\n" +
-                "                    })\n" +
-                "                });\n" +
-                "                 $(\"[data-level]\").hide();\n" +
-                "                 $(\"[data-level='0']\").show();\n" +
-                "                \n" +
-                "            })</script>";
+                js();
     }
-    public static String wrapper(String body){
+    public static String js(){
+        return "<script type=\"text/javascript\">\n" +
+                "\n" +
+                "    $(document).ready(function() {\n" +
+                "    $('table')\n" +
+                "    .bind('filterEnd', function () {\n" +
+                "    var f = $.tablesorter.getFilters( $(this) );\n" +
+                "    var empty=true\n" +
+                "    for (var i = 0; i < f.length; i++) {\n" +
+                "    if(f[i] != \"\"){\n" +
+                "    empty=false;\n" +
+                "    }\n" +
+                "    }\n" +
+                "    if(empty){\n" +
+                "    console.log(\"empty\");\n" +
+                "    $(\"[data-level]\").hide();\n" +
+                "    $(\"[data-level='0']\").show();\n" +
+                "    }\n" +
+                "    else{\n" +
+                "    console.log(\"not empty\");\n" +
+                "    $(\"[data-level='1']\").hide();\n" +
+                "    $(\"[data-level='2']\").hide();\n" +
+                "    }\n" +
+                "    });\n" +
+                "\n" +
+                "\n" +
+                "    $(\"table\").tablesorter({\n" +
+                "    cssChildRow: 'nosort',\n" +
+                "    widgets: [\"zebra\", \"filter\"],\n" +
+                "    widgetOptions : {\n" +
+                "    // include child row content while filtering, if true\n" +
+                "    filter_childRows  : false,\n" +
+                "    // search from beginning\n" +
+                "    filter_startsWith : true,\n" +
+                "    filter_columnFilters : true,\n" +
+                "    }\n" +
+                "    });\n" +
+                "\n" +
+                "    function getChildren($row) {\n" +
+                "    var children = [], level = $row.attr('data-level');\n" +
+                "    while($row.next().attr('data-level') > level) {\n" +
+                "\n" +
+                "    if($row.next().attr('data-level') == parseInt(level)+1){\n" +
+                "    children.push($row.next());\n" +
+                "    }\n" +
+                "    $row = $row.next();\n" +
+                "    }\n" +
+                "    return children;\n" +
+                "    }\n" +
+                "\n" +
+                "    $('.parent').on('click', function() {\n" +
+                "\n" +
+                "    var children = getChildren($(this));\n" +
+                "    $.each(children, function() {\n" +
+                "    if($(this).is(\":visible\")){\n" +
+                "    var subchilds=getChildren($(this))\n" +
+                "    $.each(subchilds, function() {\n" +
+                "    $(this).hide()\n" +
+                "    })\n" +
+                "    }\n" +
+                "    $(this).toggle();\n" +
+                "    })\n" +
+                "    });\n" +
+                "    $(\"[data-level]\").hide();\n" +
+                "    $(\"[data-level='0']\").show();\n" +
+                "    })\n" +
+                "</script>";
+    }
+    public static String thead(){
+        return  "<thead>" +
+                "<tr>"+
+                "<th>"+"instance id"+"</th>"+
+                "<th>"+"txid"+"</th>"+
+                "<th>"+"BPEL"+"</th>"+
+                "<th>"+"course id"+"</th>"+
+                "<th>"+"course provider"+"</th>"+
+                "<th>"+"state"+"</th>"+
+                "<th>"+"time"+"</th>"+
+                "<th>"+"duration"+"</th>"+
+                "</tr>" +
+                "</thead>";
+    }
+    public static String wrapper(String data){
         return "<html>"+
                 head()+
                 "<body>"+
-                "<table>"+
-                body+
+                "<table id=\"hor-minimalist-b\">"+
+                thead()+
+                data+
                 "</table>"+
                 "</body>"+
                 "</html>";
+    }
+    public static void before(PrintWriter out){
+        out.println("<html>"+
+                head()+
+                "<body>"+
+                "<table id=\"hor-minimalist-b\">"+
+                thead());
+    }
+    public static void after(PrintWriter out){
+        out.println("</table>"+
+                "</body>"+
+                "</html>");
+    }
+    public static void main(String args[]){
+        Driver d=new Driver(true);
+        d.htmlContent("ppe");
     }
 }

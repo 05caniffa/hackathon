@@ -1,0 +1,10 @@
+[	
+	{
+		"name":"sb1prod",
+		"host":"t3://b1esbprod03:8001",
+		"maxRelativeToNowInMinutes":"0",
+		"minRelativeToNowInMinutes":"-1",
+		"user":"system",
+		"pass":"8mRh9hfdnLq259HJZli63Fp9Sku3+Imn"
+	}
+]

@@ -5,15 +5,15 @@
  * Time: 12:47 PM
  * To change this template use File | Settings | File Templates.
  */
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.io.File;
 
 import oracle.soa.management.facade.ComponentInstance;
 import org.apache.log4j.Logger;
+import org.apache.xml.serialize.Method;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.*;
 
@@ -24,6 +24,8 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -40,6 +42,7 @@ public class SoaInstance {
     private String state;
     private String time;
     private String BPEL;
+    private String duration;
     private List events=new ArrayList();
     private static org.apache.log4j.Logger logger;
     private List courseMgmtLabels= Arrays.asList("ReceiveCourse",
@@ -56,21 +59,36 @@ public class SoaInstance {
             "Invoke_CCNGTx_New",
             "InvokeSMSTx",
             "InvokePortalNotification");
-    public SoaInstance(String instance_id,String txid, String course_id, String course_provider, String state, String time){
-        this.instance_id=instance_id;
-        this.course_id=course_id;
-        this.course_provider=course_provider;
-        this.state=state;
-        this.time=time;
-        logger=Logger.getLogger("driver");
-    }
-    public SoaInstance(ComponentInstance instance){
+    private List regEnrollLabels= Arrays.asList("ReceiveUCE",
+            "InvokeSMSLookupService",
+            "InvokeSMS",
+            "ReceiveSMS",
+            "InvokeGB",
+            "ReceiveGB",
+            "InvokeCC",
+            "Invoke_CCBPMS",
+            "ReceiveCC",
+            "Invoke_XLCCNG",
+            "Receive_XLCCNG",
+            "InvokeGBTx",
+            "InvokeCCNGTx",
+            "InvokeXLCCNGTx",
+            "InvokeSMSTx",
+            "InvokePortal");
+    public SoaInstance(ComponentInstance instance,boolean show){
         logger=Logger.getLogger("driver");
         try {
             String xml= String.valueOf(instance.getAuditTrail());
             this.instance_id=instance.getCompositeInstanceId();
             this.time=instance.getCreationDate().toString();
             this.BPEL=instance.getComponentName();
+            List bpellabels=new ArrayList();
+            if (this.BPEL.equals("CourseMgmt")){
+                bpellabels=courseMgmtLabels;
+            }
+            else if(this.BPEL.equals("RegEnroll")){
+                bpellabels=regEnrollLabels;
+            }
             this.state=instance.getNormalizedStateAsString();
 
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -82,6 +100,7 @@ public class SoaInstance {
             NodeList events = doc.getElementsByTagName("event");
             Date last=null;
             Date cur=null;
+            Date start=null;
             long diff=0;
             for(int s=0; s<events.getLength() ; s++){
                 Node item = events.item(s);
@@ -93,7 +112,7 @@ public class SoaInstance {
                 }
                 if(labelnode!=null){
                     String label = labelnode.getTextContent();
-                    if(courseMgmtLabels.contains(label) || s==events.getLength()-1){
+                    if(bpellabels.contains(label) || s==events.getLength()-1){
                         Node details=item.getLastChild();
                         if(last==null){
                             //2013-05-28T06:38:15.306-04:00
@@ -101,17 +120,20 @@ public class SoaInstance {
                             String orig=item.getAttributes().getNamedItem("date").getTextContent();
                             String fixed=orig.substring(0,orig.length()-3)+"00";
                             last=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(fixed);
+                            start=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(fixed);
                         }
                         String orig=item.getAttributes().getNamedItem("date").getTextContent();
                         String fixed=orig.substring(0,orig.length()-3)+"00";
                         cur=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(fixed);
                         diff=cur.getTime()-last.getTime();
                         last=cur;
+                        this.duration=String.valueOf(cur.getTime()-start.getTime());
                         if(details.getNodeName().equals("details")){
-                            addEvent(new AuditEvent(label,eventn,prettyFormat(details.getTextContent(),4),diff));
+                            Document tmp = docBuilder.parse(new InputSource(new StringReader(details.getTextContent())));
+                            addEvent(new AuditEvent(label, eventn, prettyPrintWithXMLSerializer(tmp), diff,show));
                         }
                         else{
-                            addEvent(new AuditEvent(label,eventn,details.getTextContent(),diff));
+                            addEvent(new AuditEvent(label,eventn,details.getTextContent(),diff,show));
                         }
                         if(label.equals("ReceiveCourse")){
                             Document tmp=docBuilder.parse(new InputSource(new StringReader(details.getTextContent())));
@@ -119,11 +141,11 @@ public class SoaInstance {
                             this.txid=tmp.getElementsByTagName("transactionId").item(0).getTextContent();
                             this.course_id=tmp.getElementsByTagName("extCourseId").item(0).getTextContent();
                         }
-                        if(label.equals("InvokeCatalogService")){
+                        else if(label.equals("InvokeCatalogService")){
                             Document tmp=docBuilder.parse(new InputSource(new StringReader(details.getTextContent())));
                             tmp.getDocumentElement().normalize();
                             this.course_provider=tmp.getElementsByTagName("courseProviderRef").item(0).getLastChild().getTextContent();
-                        } 
+                        }
                         else if(label.equals("InvokeLookupService")){
                             Document tmp=docBuilder.parse(new InputSource(new StringReader(details.getTextContent())));
                             tmp.getDocumentElement().normalize();
@@ -131,10 +153,57 @@ public class SoaInstance {
                                 ;
                             }
                             else{
-                                NodeList recips=tmp.getElementsByTagName("n3:recipients").item(0).getChildNodes();
+                                NodeList recipnode = tmp.getElementsByTagName("n3:recipients");
+                                if(recipnode.item(0)!=null){
+                                    NodeList recips=recipnode.item(0).getChildNodes();
+                                    for(int i=0;i<recips.getLength();i++){
+                                        if(recips.item(i).getTextContent().equals("coursecompass")){
+                                            Node courseProviderId = recips.item(i).getAttributes().getNamedItem("courseProviderId");
+                                            if(courseProviderId!=null){
+                                                this.course_provider=courseProviderId.getTextContent();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if(label.equals("ReceiveUCE")){
+                            Document tmp=docBuilder.parse(new InputSource(new StringReader(details.getTextContent())));
+                            tmp.getDocumentElement().normalize();
+                            if(tmp.getElementsByTagName("enroll:transactionId").item(0)!=null){
+                                this.txid=tmp.getElementsByTagName("enroll:transactionId").item(0).getTextContent();
+                            }
+                            else if(tmp.getElementsByTagName("user:transactionId").item(0)!=null){
+                                this.txid=tmp.getElementsByTagName("user:transactionId").item(0).getTextContent();
+                            }
+                            if(tmp.getElementsByTagName("enroll:extCourseId").item(0)!=null){
+                                this.course_id=tmp.getElementsByTagName("enroll:extCourseId").item(0).getTextContent();
+                            }
+                            NodeList recipnode = tmp.getElementsByTagName("sys:recipients");
+                            if(recipnode.item(0)!=null){
+                                NodeList recips=recipnode.item(0).getChildNodes();
                                 for(int i=0;i<recips.getLength();i++){
                                     if(recips.item(i).getTextContent().equals("coursecompass")){
-                                        this.course_provider=recips.item(i).getAttributes().getNamedItem("courseProviderId").getTextContent();
+                                        Node courseProviderId = recips.item(i).getAttributes().getNamedItem("courseProviderId");
+                                        if(courseProviderId!=null){
+                                            this.course_provider=courseProviderId.getTextContent();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (label.equals("InvokeSMSLookupService")){
+                            Document tmp=docBuilder.parse(new InputSource(new StringReader(details.getTextContent())));
+                            tmp.getDocumentElement().normalize();
+                            NodeList recipnode = tmp.getElementsByTagName("n3:recipients");
+                            if(recipnode.item(0)!=null){
+                                NodeList recips=recipnode.item(0).getChildNodes();
+                                for(int i=0;i<recips.getLength();i++){
+                                    if(recips.item(i).getTextContent().equals("coursecompass")){
+                                        Node courseProviderId = recips.item(i).getAttributes().getNamedItem("courseProviderId");
+                                        if(courseProviderId!=null){
+                                            this.course_provider=courseProviderId.getTextContent();
+                                        }
                                     }
                                 }
                             }
@@ -148,9 +217,13 @@ public class SoaInstance {
         }catch (SAXException e) {
             Exception x = e.getException ();
             ((x == null) ? e : x).printStackTrace();
-        }catch (Throwable t) {
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        catch (Throwable t) {
             t.printStackTrace ();
         }
+
     }
     public String toString(){
         String ret="| "+this.instance_id+
@@ -182,25 +255,42 @@ public class SoaInstance {
                 "<td>"+this.course_provider+"</td>"+
                 "<td>"+this.state+"</td>"+
                 "<td>"+this.time+"</td>"+
+                "<td>"+this.duration+"</td>"+
                 "</tr>";
     }
     private void addEvent(AuditEvent event){
         this.events.add(event);
     }
 
-    public static String prettyFormat(String input, int indent) {
+    public static String prettyPrintXml(String sourceXml) {
         try {
-            Source xmlInput = new StreamSource(new StringReader(input));
-            StringWriter stringWriter = new StringWriter();
-            StreamResult xmlOutput = new StreamResult(stringWriter);
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute("indent-number", indent);
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.transform(xmlInput, xmlOutput);
-            return xmlOutput.getWriter().toString();
+            Transformer serializer = SAXTransformerFactory.newInstance().newTransformer();
+
+            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+            serializer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+
+            Source xmlSource = new SAXSource(new InputSource(new ByteArrayInputStream(sourceXml.getBytes())));
+            StreamResult res = new StreamResult(new ByteArrayOutputStream());
+
+            serializer.transform(xmlSource, res);
+
+            return new String(((ByteArrayOutputStream) res.getOutputStream()).toByteArray());
         } catch (Exception e) {
-            throw new RuntimeException(e); // simple exception handling, please review it
+            return sourceXml;
+        }
+    }
+    static String prettyPrintWithXMLSerializer(Document document) {
+        try{
+            StringWriter stringWriter = new StringWriter();
+            OutputFormat format = new OutputFormat(Method.XML, "UTF-8", true);
+            format.setIndent(2);
+            XMLSerializer serializer = new XMLSerializer(stringWriter,format);
+            serializer.serialize(document);
+            return stringWriter.toString();
+        }
+        catch(Exception e){
+            return "error";
         }
     }
 }

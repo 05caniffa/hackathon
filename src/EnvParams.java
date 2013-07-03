@@ -11,8 +11,8 @@ public class EnvParams{
     public String pass;
     //relative dates will be ignored if an 
     //absolute date is also supplied
-    public int maxRelativeToNowInDays;
-    public int minRelativeToNowInDays;
+    public int maxRelativeToNowInMinutes;
+    public int minRelativeToNowInMinutes;
     public EnvParams(){
 	//nothing
     }
@@ -36,8 +36,8 @@ public class EnvParams{
 	    out+=maxAbsolute;
 	}
 	out+="\n";
-	out+="minRelativeToNowInDays = "+String.valueOf(minRelativeToNowInDays)+"\n";
-	out+="maxRelativeToNowInDays = "+String.valueOf(maxRelativeToNowInDays)+"\n";
+	out+="minRelativeToNowInDays = "+String.valueOf(minRelativeToNowInMinutes)+"\n";
+	out+="maxRelativeToNowInDays = "+String.valueOf(maxRelativeToNowInMinutes)+"\n";
 	out+="state = "+state+"\n";
 	out+="compositeName = "+compositeName+"\n";
 	out+="user = "+user+"\n";

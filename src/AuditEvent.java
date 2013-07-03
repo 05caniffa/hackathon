@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.Date;
 
 /**
@@ -31,18 +33,23 @@ public class AuditEvent {
         return ret;
     }
     public String parentRow(){
-        return "<tr class=\"parent\" data-level=\"1\">"+
-                "<td>"+this.label+"</td>"+
+        return "<tr class=\"parent nosort\" data-level=\"1\">"+
+                "<td/><td colspan=\"6\">"+this.label+"</td>"+
                 "<td>"+this.timediff+"</td>"+
                 "</tr>";
     }
     public String childRow(){
-        return "<tr class=\"child\" data-level=\"2\">"+
-                "<td>"+this.payload+"</td>"+
+        return "<tr class=\"child nosort\" data-level=\"2\">"+
+                "<td/><td colspan=\"7\"><pre>"+ StringEscapeUtils.escapeXml(this.payload)+"</pre></td>"+
                 "</tr>";
     }
     public String toHtml(){
-        return parentRow()+childRow();
+        if(this.show){
+            return parentRow()+childRow();
+        }
+        else{
+            return parentRow();
+        }
     }
 }
 

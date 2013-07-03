@@ -31,6 +31,7 @@ public class Env {
         CompositeInstanceFilter filter=make_filter(ep);
         try{
             instances=locator.getCompositeInstances(filter);
+
             logger.info(" Number of instances after filtering: " + instances.size());
         }
         catch(Exception e){
@@ -74,27 +75,27 @@ public class Env {
         }
         if(!(ep.minAbsolute==null)){
             filter.setMinCreationDate(ep.minAbsolute);
-            if(ep.minRelativeToNowInDays!=0){
+            if(ep.minRelativeToNowInMinutes!=0){
                 logger.warn("minRelativeToNowInDays being ignored since an absoulte min date was provided");
             }
         }
         else{
-            if(ep.minRelativeToNowInDays!=0){
+            if(ep.minRelativeToNowInMinutes!=0){
                 Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DATE,ep.minRelativeToNowInDays);
+                cal.add(Calendar.MINUTE,ep.minRelativeToNowInMinutes);
                 filter.setMinCreationDate(cal.getTime());
             }
         }
         if(!(ep.maxAbsolute==null)){
             filter.setMaxCreationDate(ep.maxAbsolute);
-            if(ep.maxRelativeToNowInDays!=0){
+            if(ep.maxRelativeToNowInMinutes!=0){
                 logger.warn("maxRelativeToNowInDays being ignored since an absoulte max date was provided");
             }
         }
         else{
-            if(ep.maxRelativeToNowInDays!=0){
+            if(ep.maxRelativeToNowInMinutes!=0){
                 Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DATE,ep.maxRelativeToNowInDays);
+                cal.add(Calendar.MINUTE,ep.maxRelativeToNowInMinutes);
                 filter.setMaxCreationDate(cal.getTime());
             }
         }

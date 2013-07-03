@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,8 +28,15 @@ public class BrowserServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out=response.getWriter();
-        Driver d=new Driver();
-        out.println(d.htmlContent());
+        Map params=request.getParameterMap();
+        boolean show=false;
+        if(params.containsKey("show")){
+            if(String.valueOf(params.get("show")).equals("true")){
+                show=true;
+            }
+        }
+        Driver d=new Driver(show);
+        d.htmlContent(out,"ppe");
     }
     public void init() throws ServletException{
 

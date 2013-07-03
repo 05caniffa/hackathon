@@ -32,7 +32,7 @@
         </javac>
         <copy todir="build/classes">
             <fileset dir=".">
-                <include name="**/cert.json"/>
+                <include name="**/*.json"/>
                 <include name="**/log4j.properties"/>
             </fileset>
         </copy>
@@ -42,7 +42,7 @@
         <copy todir="WebContent/WEB-INF/classes">
             <fileset dir="build/classes">
                 <include name="**/*.class"/>
-                <include name="**/cert.json"/>
+                <include name="**/*.json"/>
                 <include name="**/log4j.properties"/>
             </fileset>
         </copy>
