@@ -10,14 +10,9 @@ import java.util.List;
 import java.util.Properties;
 
 import oracle.soa.management.facade.*;
-import oracle.soa.management.facade.bpel.*;
 import oracle.soa.management.util.*;
 import weblogic.xml.saaj.util.IOUtils;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,12 +28,11 @@ public class Driver {
     }
     private static org.apache.log4j.Logger logger;
     public void htmlContent(String env){
-        htmlContent(new PrintWriter(System.out,true),env);
+        htmlContent(new PrintWriter(System.out,true),env,null,null,null);
     }
-    public void htmlContent(PrintWriter out,String env){
+    public void htmlContent(PrintWriter out,String env,String minRelativeToNowInMinutes,String maxRelativeToNowInMinutes,String state){
         String jsonText="";
         String filename=env+".json";
-        //String ret="";
         logger= Logger.getLogger("driver");
         try{
             Properties props = new Properties();
@@ -66,6 +60,15 @@ public class Driver {
         JsonArray array = parser.parse(jsonText).getAsJsonArray();
         for(int i=0;i<array.size();i++){
             EnvParams ep=gson.fromJson(array.get(i),EnvParams.class);
+            if(minRelativeToNowInMinutes!=null){
+                ep.minRelativeToNowInMinutes=Integer.parseInt(minRelativeToNowInMinutes);
+            }
+            if(maxRelativeToNowInMinutes!=null){
+                ep.maxRelativeToNowInMinutes=Integer.parseInt(maxRelativeToNowInMinutes);
+            }
+            if(state!=null){
+                ep.state=state;
+            }
             try{
                 Env e=new Env(ep);
                 List<CompositeInstance> instances=e.getFilteredInstances();
@@ -267,6 +270,6 @@ public class Driver {
     }
     public static void main(String args[]){
         Driver d=new Driver(true);
-        d.htmlContent("cert");
+        d.htmlContent("prod");
     }
 }

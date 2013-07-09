@@ -1,19 +1,10 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import oracle.soa.management.facade.ComponentInstance;
-import oracle.soa.management.facade.CompositeInstance;
-import oracle.soa.management.util.ComponentInstanceFilter;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,13 +21,36 @@ public class BrowserServlet extends HttpServlet {
         PrintWriter out=response.getWriter();
         Map params=request.getParameterMap();
         boolean show=false;
+        String env="ppe";
+        String min=null;
+        String max=null;
+        String state=null;
         if(params.containsKey("show")){
-            if(String.valueOf(params.get("show")).equals("true")){
+            String[] vals=(String[])params.get("show");
+            if(vals[0].equals("true")){
                 show=true;
             }
         }
+        if(params.containsKey("env")){
+            String[] vals=(String[])params.get("env");
+            if(vals[0].equals("cert") || vals[0].equals("ppe") || vals[0].equals("prod")){
+                env=vals[0];
+            }
+        }
+        if(params.containsKey("state")){
+            String[] vals=(String[])params.get("state");
+            state=vals[0];
+        }
+        if(params.containsKey("minRelativeToNowInMinutes")){
+            String[] vals=(String[])params.get("minRelativeToNowInMinutes");
+            min=vals[0];
+        }
+        if(params.containsKey("maxRelativeToNowInMinutes")){
+            String[] vals=(String[])params.get("maxRelativeToNowInMinutes");
+            max=vals[0];
+        }
         Driver d=new Driver(show);
-        d.htmlContent(out,"ppe");
+        d.htmlContent(out,env,min,max,state);
     }
     public void init() throws ServletException{
 

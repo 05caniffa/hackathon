@@ -3,7 +3,7 @@
 		"name":"sb1ppe",
 		"host":"t3://b1esbppe03:8001",
 		"maxRelativeToNowInMinutes":"-0",
-		"minRelativeToNowInMinutes":"-120",
+		"minRelativeToNowInMinutes":"-10",
 		"user":"weblogic",
 		"pass":"agS07GWEd0xzuI0j0qT/SqnLjipEXfVF"
 	}

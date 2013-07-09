@@ -19,12 +19,6 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -171,6 +165,9 @@ public class SoaInstance {
                             }
                             else if(tmp.getElementsByTagName("user:transactionId").item(0)!=null){
                                 this.txid=tmp.getElementsByTagName("user:transactionId").item(0).getTextContent();
+                            }
+                            else if(tmp.getElementsByTagName("cour:transactionId").item(0)!=null){
+                                this.txid=tmp.getElementsByTagName("cour:transactionId").item(0).getTextContent();
                             }
                             if(tmp.getElementsByTagName("enroll:extCourseId").item(0)!=null){
                                 this.course_id=tmp.getElementsByTagName("enroll:extCourseId").item(0).getTextContent();
