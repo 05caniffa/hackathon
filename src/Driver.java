@@ -32,10 +32,10 @@ public class Driver {
         this.show=show;
     }
     private static org.apache.log4j.Logger logger;
-    public String htmlContent(String env){
-        return htmlContent(new PrintWriter(System.out,true),env);
+    public void htmlContent(String env){
+        htmlContent(new PrintWriter(System.out,true),env);
     }
-    public String htmlContent(PrintWriter out,String env){
+    public void htmlContent(PrintWriter out,String env){
         String jsonText="";
         String filename=env+".json";
         //String ret="";
@@ -48,7 +48,6 @@ public class Driver {
         catch(Exception e){
             String error="Error in reading log4j.properties";
             logger.error(error,e);
-            return error;
         }
         InputStream in=null;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -60,7 +59,6 @@ public class Driver {
         catch (Exception e){
             String error="Error in reading input";
             logger.error(error,e);
-            return error;
         }
         before(out);
         Gson gson=new Gson();
@@ -76,24 +74,18 @@ public class Driver {
                 for(CompositeInstance instance:instances){
                     List<ComponentInstance> l=instance.getChildComponentInstances(instanceFilter);
                     if(l.size()>0){
-                        //String xml= String.valueOf(l.get(0).getAuditTrail());
                         if (l.get(0).getComponentName().equals("CourseMgmt") || l.get(0).getComponentName().equals("RegEnroll")){
                             instance_list.add(new SoaInstance(l.get(0),show));
-                            //ret+=String.valueOf(instance_list.get(instance_list.size()-1));
-                            //ret+=instance_list.get(instance_list.size()-1).toHtml();
                             out.println(instance_list.get(instance_list.size()-1).toHtml());
                         }
                     }
                 }
             }
             catch(Exception e){
-                //e.printStackTrace();
-                return e.getMessage();
+                logger.error(e.getMessage());
             }
         }
-        //return ret;
         after(out);
-        return "";
     }
     public static String css(){
         return "<style>\n"+
@@ -275,6 +267,6 @@ public class Driver {
     }
     public static void main(String args[]){
         Driver d=new Driver(true);
-        d.htmlContent("ppe");
+        d.htmlContent("cert");
     }
 }

@@ -19,20 +19,16 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import weblogic.xml.saaj.mime4j.field.datetime.DateTime;
 
 public class SoaInstance {
     private String instance_id;
@@ -45,38 +41,38 @@ public class SoaInstance {
     private String duration;
     private List events=new ArrayList();
     private static org.apache.log4j.Logger logger;
-    private List courseMgmtLabels= Arrays.asList("ReceiveCourse",
-            "InvokeCatalogService",
-            "InvokeLookupService",
-            "InvokeSMS",
-            "ReceiveSMS",
-            "InvokeGB",
-            "ReceiveGB",
-            "InvokeCC",
-            "Invoke_CCNG_New",
-            "ReceiveCC",
-            "InvokeGBTx",
-            "Invoke_CCNGTx_New",
-            "InvokeSMSTx",
-            "InvokePortalNotification");
-    private List regEnrollLabels= Arrays.asList("ReceiveUCE",
-            "InvokeSMSLookupService",
-            "InvokeSMS",
-            "ReceiveSMS",
-            "InvokeGB",
-            "ReceiveGB",
-            "InvokeCC",
-            "Invoke_CCBPMS",
-            "ReceiveCC",
-            "Invoke_XLCCNG",
-            "Receive_XLCCNG",
-            "InvokeGBTx",
-            "InvokeCCNGTx",
-            "InvokeXLCCNGTx",
-            "InvokeSMSTx",
-            "InvokePortal");
     public SoaInstance(ComponentInstance instance,boolean show){
         logger=Logger.getLogger("driver");
+        List courseMgmtLabels= Arrays.asList("ReceiveCourse",
+                "InvokeCatalogService",
+                "InvokeLookupService",
+                "InvokeSMS",
+                "ReceiveSMS",
+                "InvokeGB",
+                "ReceiveGB",
+                "InvokeCC",
+                "Invoke_CCNG_New",
+                "ReceiveCC",
+                "InvokeGBTx",
+                "Invoke_CCNGTx_New",
+                "InvokeSMSTx",
+                "InvokePortalNotification");
+        List regEnrollLabels= Arrays.asList("ReceiveUCE",
+                "InvokeSMSLookupService",
+                "InvokeSMS",
+                "ReceiveSMS",
+                "InvokeGB",
+                "ReceiveGB",
+                "InvokeCC",
+                "Invoke_CCBPMS",
+                "ReceiveCC",
+                "Invoke_XLCCNG",
+                "Receive_XLCCNG",
+                "InvokeGBTx",
+                "InvokeCCNGTx",
+                "InvokeXLCCNGTx",
+                "InvokeSMSTx",
+                "InvokePortal");
         try {
             String xml= String.valueOf(instance.getAuditTrail());
             this.instance_id=instance.getCompositeInstanceId();
@@ -262,24 +258,6 @@ public class SoaInstance {
         this.events.add(event);
     }
 
-    public static String prettyPrintXml(String sourceXml) {
-        try {
-            Transformer serializer = SAXTransformerFactory.newInstance().newTransformer();
-
-            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-            serializer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
-            Source xmlSource = new SAXSource(new InputSource(new ByteArrayInputStream(sourceXml.getBytes())));
-            StreamResult res = new StreamResult(new ByteArrayOutputStream());
-
-            serializer.transform(xmlSource, res);
-
-            return new String(((ByteArrayOutputStream) res.getOutputStream()).toByteArray());
-        } catch (Exception e) {
-            return sourceXml;
-        }
-    }
     static String prettyPrintWithXMLSerializer(Document document) {
         try{
             StringWriter stringWriter = new StringWriter();

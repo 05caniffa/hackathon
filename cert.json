@@ -3,7 +3,7 @@
 		"name":"sb3cert",
 		"host":"t3://esbdc02:8001",
 		"maxRelativeToNowInMinutes":"0",
-		"minRelativeToNowInMinutes":"-60",
+		"minRelativeToNowInMinutes":"-1200",
 		"user":"weblogic",
 		"pass":"Fbs1fVAIqp2O196WaKQwKx9UqCaTBelH"
 	}

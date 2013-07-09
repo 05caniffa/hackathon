@@ -24,14 +24,23 @@ public class Env {
     private String error="";
     public Env(EnvParams ep) throws Exception{
         super();
+        int PAGE_SIZE=10;
+        int cur_page_offset=0;
+        instances=new ArrayList<CompositeInstance>();
         logger= Logger.getLogger("driver");
         locator(ep);
         if(locator==null)
             throw new Exception(this.error);
         CompositeInstanceFilter filter=make_filter(ep);
         try{
-            instances=locator.getCompositeInstances(filter);
-
+            List<CompositeInstance> tmp;
+            filter.setPageSize(PAGE_SIZE);
+            do{
+                filter.setPageStart(cur_page_offset);
+                tmp=locator.getCompositeInstances(filter);
+                instances.addAll(tmp);
+                cur_page_offset+=PAGE_SIZE;
+            }while(tmp.size()>0);
             logger.info(" Number of instances after filtering: " + instances.size());
         }
         catch(Exception e){
